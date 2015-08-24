@@ -61,22 +61,28 @@ trait Service extends Protocols {
 
   lazy val routes = {
     logRequestResult("akka-http-microservice") {
-      path("app") {
-        getFromResource("app/index.html")
+      path("skillen") {
+        getFromResource("index.html")
+      } ~
+      pathPrefix("assets") {
+        getFromResourceDirectory("assets")
+      } ~
+      pathPrefix("bower_components") {
+        getFromResourceDirectory("bower_components")
       } ~
       pathPrefix("js") {
-        getFromResourceDirectory("app/js")
+        getFromResourceDirectory("js")
+      } ~
+      pathPrefix("css") {
+        getFromResourceDirectory("css")
       } ~
       pathPrefix("node_modules") {
-        getFromResourceDirectory("app/node_modules")
+        getFromResourceDirectory("node_modules")
       } ~
+      // REST request from backbone
       pathPrefix("todos") {
         get {
           complete {
-//            JsonParser(
-//              """[{"title":"fdsafdsf1","order":1, "completed":false}
-//                |,{"title":"fdsafdsf2","order":2, "completed":false}
-//                |]""".stripMargin)
             data.values
           }
         } ~
