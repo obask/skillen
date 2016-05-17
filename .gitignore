@@ -15,4 +15,4 @@ project/plugins/project/
 # IDE specific
 .idea
 
-bower_components/
+src/main/resources/node_modules
