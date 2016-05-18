@@ -16,12 +16,9 @@
 
 "use strict";
 
-// TODO extract constants from expression
-var slotsNum = Math.trunc((window.innerWidth * 0.7 - 250) / (30 + 4)) - 1;
-
 var defaultController = function () {
     if (window.location.hash === "" || window.location.hash === "#ui") {
-        ReactDOM.render(React.createElement(CelosMainFetch, { url: "/main", request: {} }), document.getElementById('content'));
+        ReactDOM.render(React.createElement(MainFetch, {request: {}}), document.getElementById('content'));
     } else if (startsWith("#ui?", window.location.hash)) {
         var params = parseParams(window.location.hash.substring("#ui?".length).split("&"));
         var request = { groups: params.groups, zoom: params.zoom, time: params.time };
@@ -38,12 +35,12 @@ window.addEventListener('hashchange', function () {
 
 // application entry point
 ajaxGetJson(
-    /*url=*/ "/groups",
+    /*url=*/ "/workbench",
     /*data=*/ {
     },
     /*success=*/ (function (data) {
         // deep merge works fine with empty lists
-        _internalSlotsData = Immutable.fromJS(data).set("navigation", Immutable.Map());
+        _internalSlotsData = Immutable.fromJS(data);
         defaultController();
     })
 );

@@ -80,7 +80,7 @@ trait Service extends Protocols {
         getFromResourceDirectory("node_modules")
       } ~
       // REST request from backbone
-      pathPrefix("todos") {
+      pathPrefix("workbench") {
         get {
           complete {
             data.values
