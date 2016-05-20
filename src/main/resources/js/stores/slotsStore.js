@@ -29,23 +29,24 @@ var SlotsStore = Object.assign({}, EventEmitter.prototype, {
         return _internalSlotsData;
     },
 
-    LOAD_SLOTS: function (payload) {
+    LOAD_TEXT: function (payload) {
         ajaxGetJson(
-            /*url=*/ "/groups",
+            /*url=*/ "/workbench",
             /*data=*/ {
-                count: slotsNum,
                 group: payload.params.group,
                 zoom: payload.params.zoom,
                 time: payload.params.time
             },
             /*success=*/ function (data) {
                 var newState = _internalSlotsData;
-                newState = newState.updateIn(payload.breadcrumbs.concat("rows"), function (wfs) {
-                    return wfs.map(function (workflow) {
-                        return workflow.set("rows", Immutable.List())
-                    })
-                });
-                newState = newState.mergeDeep(Immutable.fromJS(data));
+                newState = newState.setIn(payload.breadcrumbs.concat("text"), Immutable.Seq());
+
+                //newState = newState.updateIn(payload.breadcrumbs.concat("rows"), function (wfs) {
+                //    return wfs.map(function (workflow) {
+                //        return workflow.set("rows", Immutable.List())
+                //    })
+                //});
+                newState = newState.mergeDeepIn(payload.breadcrumbs, Immutable.fromJS(data));
                 _internalSlotsData = newState;
                 SlotsStore.emit(CHANGE_EVENT);
             }.bind(this)
@@ -82,8 +83,8 @@ AppDispatcher.register(function (payload) {
             SlotsStore.RECTANGLE_UPDATE(payload);
             break;
 
-        case TodoConstants.LOAD_SLOTS:
-            SlotsStore.LOAD_SLOTS(payload);
+        case TodoConstants.LOAD_TEXT:
+            SlotsStore.LOAD_TEXT(payload);
             break;
 
         case TodoConstants.LOAD_NAVIGATION:

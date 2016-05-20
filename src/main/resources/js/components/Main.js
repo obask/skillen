@@ -41,7 +41,7 @@ var MainFetch = React.createClass({
 
     componentWillMount: function () {
         var nextProps = this.props;
-        AppDispatcher.handleLoadSlotsFromServer({
+        AppDispatcher.handleLoadText({
             url: nextProps.url,
             zoom: nextProps.request.zoom,
             time: nextProps.request.time
@@ -49,7 +49,7 @@ var MainFetch = React.createClass({
     },
 
     componentWillReceiveProps: function (nextProps) {
-        AppDispatcher.handleLoadSlotsFromServer({
+        AppDispatcher.handleLoadText({
             url: nextProps.url,
             zoom: nextProps.request.zoom,
             time: nextProps.request.time
@@ -57,18 +57,17 @@ var MainFetch = React.createClass({
     },
 
     render: function () {
-        console.log("this.state.data.toJS()")
+        console.log("this.state.data.toJS()");
         var tmp = this.state.data.get("workbench");
         if (tmp === undefined) {
-        console.log("return React.DOM.div()")
+        console.log("return React.DOM.div()");
             return React.DOM.div()
         }
         // else
         return React.DOM.div(null,
             React.createElement(Workbench, {
-                text: tmp,
-                caption: this.state.data.get("caption"),
-                bc: Immutable.Seq()
+                workbench: tmp,
+                breadcrumbs: Immutable.Seq("workbench")
             })
         )
     }

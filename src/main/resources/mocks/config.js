@@ -7,6 +7,5 @@ var MOCK_WORKBENCH = {
           c: "word"}
         ,", my little"
         ," friend"
-        ],
-
+        ]
 };

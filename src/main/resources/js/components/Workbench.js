@@ -21,14 +21,13 @@ var Workbench = React.createClass({
 
     render: function () {
         return React.DOM.div(null,
-            React.DOM.h1(null, this.props.caption),
+            React.DOM.h1(null, this.props.workbench.get("caption")),
             React.DOM.br(),
             React.createElement(MarkedText, {
-                            text: this.props.text,
-                            bc: this.props.bc
+                            text: this.props.workbench.get("text"),
+                            bc: this.props.breadcrumbs.concat("text")
                         })
         )
-
     }
 
 });
@@ -38,15 +37,23 @@ var Workbench = React.createClass({
 var MarkedText = React.createClass({
     displayName: "MarkedText",
 
+
+    TMP: Immutable.fromJS([
+        "Dsd asd as dasd a",
+        "dsad sa sa ",
+        {w: "QQQQ"}
+    ]),
+
     render: function () {
         return React.DOM.div({onContextMenu: this.handleContextMenu},
+            //this.TMP.map(function (textOrItem, i) {
                 this.props.text.map(function (textOrItem, i) {
-                                                 console.log("textOrItem")
-                                                 console.log(textOrItem)
+                                                 console.log("textOrItem");
                                                  if (typeof(textOrItem) == "string") {
+                                                     console.log(textOrItem);
                                                      return textOrItem
                                                  } else {
-                                                     console.log(textOrItem);
+                                                     console.log(textOrItem.toJS());
                                                      var clazz = textOrItem.get("c");
                                                      return React.DOM.span({key: i, style: {color: "red"}},
                                                              textOrItem.get("w")

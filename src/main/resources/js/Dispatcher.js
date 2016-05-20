@@ -22,7 +22,7 @@ var TodoConstants = {
     LOAD_GROUPS: "LOAD_GROUPS",
     TODO_UPDATE: "TODO_UPDATE",
     RECTANGLE_UPDATE: "RECTANGLE_UPDATE",
-    LOAD_SLOTS: "LOAD_SLOTS",
+    LOAD_TEXT: "LOAD_TEXT",
     FOCUS_ON_SLOT: "FOCUS_ON_SLOT",
     CLEAR_SELECTION: "CLEAR_SELECTION",
     LOAD_NAVIGATION: "LOAD_NAVIGATION",
@@ -37,7 +37,7 @@ var AppDispatcher = {
     /**
      * A bridge function between the views and the dispatcher, marking the action
      * as a view action.  Another variant here could be handleServerAction.
-     * @param  {object} action The data coming from the view.
+     * @param  {object} params The data coming from the view.
      */
     focusOnSlot: function (params) {
         this.dispatch({
@@ -70,11 +70,11 @@ var AppDispatcher = {
         })
     },
 
-    handleLoadSlotsFromServer: function (params) {
+    handleLoadText: function (params) {
         this.dispatch({
-            actionType: TodoConstants.LOAD_SLOTS,
+            actionType: TodoConstants.LOAD_TEXT,
             params: params,
-            breadcrumbs: params.breadcrumbs
+            breadcrumbs: Immutable.Seq(["workbench"])
         })
     },
 

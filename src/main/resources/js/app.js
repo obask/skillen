@@ -33,17 +33,29 @@ window.addEventListener('hashchange', function () {
     defaultController();
 });
 
-// application entry point
-ajaxGetJson(
-    /*url=*/ "/workbench",
-    /*data=*/ {
-    },
-    /*success=*/ (function (data) {
-        // deep merge works fine with empty lists
-        _internalSlotsData = Immutable.fromJS(data);
-        defaultController();
-    })
-);
+
+
+var STARTUP_DATA = {
+    workbench: {
+        caption: "QWERTY",
+        text: []
+        }
+};
+
+
+_internalSlotsData = Immutable.fromJS(STARTUP_DATA);
+defaultController();
+
+
+//// application entry point
+//ajaxGetJson(
+//    /*url=*/ "/workbench",
+//    /*data=*/ {
+//    },
+//    /*success=*/ (function (data) {
+//        // deep merge works fine with empty lists
+//    })
+//);
 
 window.onclick = function(e) {
     // close context menu

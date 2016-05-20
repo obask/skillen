@@ -18,26 +18,19 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.math._
 import spray.json.{JsonParser, DefaultJsonProtocol}
 
-// TODO https://github.com/tastejs/todomvc/tree/gh-pages/examples/react-backbone
-
-case class IpInfo(ip: String, country: Option[String], city: Option[String], latitude: Option[Double], longitude: Option[Double])
-
-case class IpPairSummaryRequest(ip1: String, ip2: String)
-
-case class IpPairSummary(distance: Option[Double], ip1Info: IpInfo, ip2Info: IpInfo)
-
 
 case class JustInfo(ip: String, country: Option[String])
 
-case class JustRequest(title: String, order: Int, completed: Boolean)
+case class JustRequest(t: String, w: String, c: String)
+
+case class WorkbenchInfo(caption: String, text: Seq[Either[String, JustRequest]])
+
 
 trait Protocols extends DefaultJsonProtocol {
   implicit val justInfoFormat = jsonFormat2(JustInfo.apply)
   implicit val justRequestFormat = jsonFormat3(JustRequest.apply)
+  implicit val justWorkbenchInfoFormat = jsonFormat2(WorkbenchInfo.apply)
 
-  implicit val ipInfoFormat = jsonFormat5(IpInfo.apply)
-  implicit val ipPairSummaryRequestFormat = jsonFormat2(IpPairSummaryRequest.apply)
-  implicit val ipPairSummaryFormat = jsonFormat3(IpPairSummary.apply)
 }
 
 trait Service extends Protocols {
@@ -48,16 +41,36 @@ trait Service extends Protocols {
   def config: Config
   val logger: LoggingAdapter
 
+
 //  lazy val projectPath = config.getString("project.path")
 
-  val data = mutable.Map(
-     "zz1" -> JustRequest("zz1", 1, completed = false)
-    ,"zz2" -> JustRequest("zz2", 2, completed = false)
-    ,"zz3" -> JustRequest("zz3", 3, completed = false)
-    ,"zz4" -> JustRequest("zz4", 4, completed = false)
-    ,"zz5" -> JustRequest("zz5", 5, completed = false)
-  )
+//  val data = mutable.Map(
+//     "zz1" -> JustRequest("zz1", 1, completed = false)
+//    ,"zz2" -> JustRequest("zz2", 2, completed = false)
+//    ,"zz3" -> JustRequest("zz3", 3, completed = false)
+//    ,"zz4" -> JustRequest("zz4", 4, completed = false)
+//    ,"zz5" -> JustRequest("zz5", 5, completed = false)
+//  )
 
+//  val data = Seq[Either[String, Int]](
+//    Left("ololol")
+//    ,JustRequest("zz1", 1, completed = false)
+//    ,JustRequest("zz2", 2, completed = false)
+//      ,"o1231231  lolol"
+//    ,JustRequest("zz3", 3, completed = false)
+//    ,JustRequest("zz4", 4, completed = false)
+//    ,JustRequest("zz5", 5, completed = false)
+//  )
+
+  val data: Seq[Either[String, JustRequest]] = Seq(
+    JustRequest("zz1", "1", c = "false"),
+    "dsadsa 12 1 ",
+    JustRequest("zz1", "4", c = "false"),
+    " dsadsa"
+  ) map {
+    case j: JustRequest => Right(j)
+    case s: String => Left(s)
+  }
 
   lazy val routes = {
     logRequestResult("akka-http-microservice") {
@@ -79,17 +92,34 @@ trait Service extends Protocols {
       pathPrefix("node_modules") {
         getFromResourceDirectory("node_modules")
       } ~
+      pathPrefix("ololo") {
+        get {
+          complete {
+            JsonParser(
+              """
+                |
+                |
+                |{"success": true}
+                |
+                |
+                |""".stripMargin)
+          }
+        }
+      } ~
       // REST request from backbone
       pathPrefix("workbench") {
         get {
           complete {
-            data.values
+            WorkbenchInfo(
+              caption = "dsadsada",
+              text = data
+            )
           }
         } ~
           (post & entity(as[JustRequest])) { x =>
           complete {
             logger.warning("DEBUG = " + x)
-            data(x.title) = x
+//            data(x.title) = x
             JsonParser("""{"success": true}""".stripMargin)
           }
         }

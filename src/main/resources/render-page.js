@@ -7,8 +7,6 @@ var ajaxGetJson = function(url0, data, successCallback) {
     console.log("ajaxGetJson" + url0);
 };
 
-var slotsNum = 42;
-
 // TODO select some slot to check sidebar render
 
 _internalSlotsData = Immutable.fromJS(MOCK_CONFIG);
