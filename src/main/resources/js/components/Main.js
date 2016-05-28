@@ -65,6 +65,7 @@ var MainFetch = React.createClass({
         }
         // else
         return React.DOM.div(null,
+            React.createElement(Sidebar),
             React.createElement(Workbench, {
                 workbench: tmp,
                 breadcrumbs: Immutable.Seq("workbench")
