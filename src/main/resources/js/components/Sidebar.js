@@ -20,17 +20,24 @@
 var Sidebar = React.createClass({
     displayName: "Sidebar",
 
-    TMP: Immutable.fromJS({
-        selected: "ololo"
+    FIELDS: Immutable.fromJS({
+        "#about": "About",
+        "#add-text": "add-text",
+        "#list-books": "list-books",
+        "#learn-words": "learn-words"
     }),
 
     render: function () {
-        var fields = Immutable.fromJS(["about", "add text", "my texts", "learn words"]);
+        var selected = this.props.hash;
+        console.log(selected);
         return React.DOM.div({style: {"background-color": "beige"}},
             "SIDEBAR:",
             React.DOM.ul(null,
-                fields.map(function (label, i) {
-                    return React.DOM.li({key: i}, label)
+                this.FIELDS.map(function (label, k) {
+                    var cl = (this.props.hash == k) ? "red" : "black";
+                    return React.DOM.li({key: k},
+                        React.DOM.a({href: k, style: {color: cl}}, label)
+                    )
                 }.bind(this)).valueSeq().toJS()
             )
         )

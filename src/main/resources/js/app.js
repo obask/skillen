@@ -16,15 +16,26 @@
 
 "use strict";
 
+
+// http://magic.reactjs.net/htmltojsx.htm
+// https://babeljs.io/repl/
+
 var defaultController = function () {
     if (window.location.hash === "" || window.location.hash === "#ui") {
         ReactDOM.render(React.createElement(MainFetch, {request: {}}), document.getElementById('content'));
     } else if (startsWith("#ui?", window.location.hash)) {
         var params = parseParams(window.location.hash.substring("#ui?".length).split("&"));
-        var request = { groups: params.groups, zoom: params.zoom, time: params.time };
-        ReactDOM.render(React.createElement(CelosMainFetch, { url: "/main", request: request }), document.getElementById('content'));
+        var request = {groups: params.groups, zoom: params.zoom, time: params.time};
+        ReactDOM.render(React.createElement(CelosMainFetch, {
+            url: "/main",
+            request: request
+        }), document.getElementById('content'))
+    } else if (window.location.hash === "#add-text") {
+            ReactDOM.render(React.createElement(UploadBook, {navigation: {hash: window.location.hash}}), document.getElementById('content'))
+    } else if (window.location.hash === "#about") {
+        ReactDOM.render(React.createElement(AboutTab, {navigation: {hash: window.location.hash}}), document.getElementById('content'))
     } else {
-        throw "no route for this URL: " + window.location.hash;
+        throw "no route for this URL: " + window.location.hash
     }
 };
 
@@ -57,9 +68,9 @@ defaultController();
 //    })
 //);
 
-window.onclick = function(e) {
-    // close context menu
-    ReactDOM.render(React.createElement(ContextMenu, {showElement: false}),
-        document.getElementById('contextMenu'));
-    return true;
-};
+//window.onclick = function(e) {
+//    // close context menu
+//    ReactDOM.render(React.createElement(ContextMenu, {showElement: false}),
+//        document.getElementById('contextMenu'));
+//    return true;
+//};

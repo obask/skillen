@@ -19,6 +19,8 @@
 var CHANGE_EVENT = 'change';
 
 var TodoConstants = {
+    UPLOAD_BOOK: "UPLOAD_BOOK",
+
     LOAD_GROUPS: "LOAD_GROUPS",
     TODO_UPDATE: "TODO_UPDATE",
     RECTANGLE_UPDATE: "RECTANGLE_UPDATE",
@@ -39,6 +41,27 @@ var AppDispatcher = {
      * as a view action.  Another variant here could be handleServerAction.
      * @param  {object} params The data coming from the view.
      */
+    uploadBook: function (params) {
+        ajaxPostJSON("/api/upload-book", {
+                params: "upload",
+                data: params
+            },
+            function (res) {
+                console.log("response:");
+                console.log(res);
+                window.window.location.hash = "#list-books"
+            }
+        );
+
+        //this.dispatch({
+        //    actionType: TodoConstants.UPLOAD_BOOK,
+        //    params: params,
+        //    breadcrumbs: params.breadcrumbs
+        //})
+
+
+    },
+
     focusOnSlot: function (params) {
         this.dispatch({
             actionType: TodoConstants.FOCUS_ON_SLOT,
