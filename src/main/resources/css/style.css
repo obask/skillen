@@ -1,0 +1,21 @@
+body {
+  padding-top: 50px;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+table {
+    table-layout: fixed;
+}
+
+.workflowTable {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    border-collapse: separate;
+    border-spacing: 2px;
+
+}

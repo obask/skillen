@@ -1,12 +1,5 @@
 package lib
 
-/**
- * Created with IntelliJ IDEA.
- * User: oleg
- * Date: 02/11/13
- * Time: 20:58
- */
-
 object Counts {
   val text =
     """

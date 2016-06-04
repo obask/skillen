@@ -1,195 +1,78 @@
-/**
- * This file provided by Facebook is for non-commercial testing and evaluation purposes only.
- * Facebook reserves all rights not expressly granted.
+/*
+ * Copyright 2015 Collective, Inc.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied.  See the License for the specific language governing
+ * permissions and limitations under the License.
  */
 
-var CommentBox = React.createClass({
-  loadCommentsFromServer: function() {
-    $.ajax({
-      url: this.props.url,
-      dataType: 'json',
-      cache: false,
-      success: function(data) {
-        this.setState({data: data});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
-    });
-  },
-  getInitialState: function() {
-    return {data: []};
-  },
-  componentDidMount: function() {
-    this.loadCommentsFromServer();
-  },
-  render: function() {
-    return (
-      <div >
-        <ProductTable data={this.state.data} />
-      </div>
-    );
-  }
-});
+"use strict";
 
 
-var ProductTable = React.createClass({
-    render: function() {
-        var rows = [];
-        var lastCategory = null;
-        this.props.data.forEach(function(product) {
-            rows.push(<ProductRow product={product} key={product.key} />);
-        }.bind(this));
-        return (
-    <table className="table table-striped">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Header</th>
-            <th>Header</th>
-            <th>Header</th>
-            <th>Header</th>
-        </tr>
-        </thead>
-            <tbody>
-                {rows}
-            </tbody>
-        </table>
-        );
+// http://magic.reactjs.net/htmltojsx.htm
+// https://babeljs.io/repl/
+
+var defaultController = function () {
+    if (window.location.hash === "" || window.location.hash === "#ui") {
+        ReactDOM.render(React.createElement(MainFetch, {request: {}}), document.getElementById('content'));
+    } else if (startsWith("#ui?", window.location.hash)) {
+        var params = parseParams(window.location.hash.substring("#ui?".length).split("&"));
+        var request = {groups: params.groups, zoom: params.zoom, time: params.time};
+        ReactDOM.render(React.createElement(CelosMainFetch, {
+            url: "/main",
+            request: request
+        }), document.getElementById('content'))
+    } else if (window.location.hash === "#add-text") {
+            ReactDOM.render(React.createElement(UploadBook, {navigation: {hash: window.location.hash}}), document.getElementById('content'))
+    } else if (window.location.hash === "#about") {
+        ReactDOM.render(React.createElement(AboutTab, {navigation: {hash: window.location.hash}}), document.getElementById('content'))
+    } else if (window.location.hash === "#list-books") {
+        ReactDOM.render(React.createElement(Library, {navigation: {hash: window.location.hash}}), document.getElementById('content'))
+    } else {
+        throw "no route for this URL: " + window.location.hash
     }
+};
+
+window.addEventListener('hashchange', function () {
+    console.log("URL:", window.location.hash);
+    defaultController();
 });
 
 
-var ProductRow = React.createClass({
-    render: function() {
-        return (
-            <tr>
-                <td><a href={this.props.product.url}> {this.props.product.text} </a> </td>
-                <td>{this.props.product.author}</td>
-                <td>Empty</td>
-                <td>Empty</td>
-            </tr>
-        );
-    }
-});
+
+var STARTUP_DATA = {
+    workbench: {
+        caption: "QWERTY",
+        text: []
+        }
+};
 
 
-//var CommentForm = React.createClass({
-//  handleSubmit: function(e) {
-//    e.preventDefault()
-//    var author = React.findDOMNode(this.refs.author).value.trim()
-//    var text = React.findDOMNode(this.refs.text).value.trim()
-//    if (!text || !author) {
-//      return;
-//    }
-//    this.props.onCommentSubmit({author: author, text: text})
-//    React.findDOMNode(this.refs.author).value = ''
-//    React.findDOMNode(this.refs.text).value = ''
-//  },
-//  render: function() {
-//    return (
-//      <form className="commentForm" onSubmit={this.handleSubmit}>
-//        <input type="text" placeholder="Your name" ref="author" />
-//        <input type="text" placeholder="Say something..." ref="text" />
-//        <input type="submit" value="Post" />
-//      </form>
-//    )
-//  }
-//});
+_internalSlotsData = Immutable.fromJS(STARTUP_DATA);
+defaultController();
 
 
-var ProblemTable = React.createClass({
-    render: function() {
-        console.log(this.props)
-        var rows = this.props.data.text.map(function(row, idx) {
-                                            return (<p>{row}</p>);
-                                            });
-        return (
-            <div>
-            <h2> {this.props.data.header} </h2>
-            {rows}
-            <h4> ---------- </h4>
-            </div>
-        )
-    }
-});
+//// application entry point
+//ajaxGetJson(
+//    /*url=*/ "/workbench",
+//    /*data=*/ {
+//    },
+//    /*success=*/ (function (data) {
+//        // deep merge works fine with empty lists
+//    })
+//);
 
-var ProblemInfo = React.createClass({
-  loadInfoFromServer: function() {
-    $.ajax({
-      url: this.props.url,
-      dataType: 'json',
-      cache: false,
-      success: function(data) {
-        this.setState({data: data});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString())
-      }.bind(this)
-    })
-  },
-  getInitialState: function() {
-    return {data: {text: []}};
-  },
-  componentDidMount: function() {
-    this.loadInfoFromServer()
-  },
-  render: function() {
-    return (
-      <div >
-        <ProblemTable data={this.state.data} />
-      </div>
-    )
-  }
-});
-
-console.log("one:", document.referrer)
-console.log("two:", window.location.pathname)
-console.log("three:", window.location.href)
-console.log("four:", window.location.hash)
-
-
-routie('hello', function() {
-    //this gets called when hash == #hello
-    React.render(
-      <ProblemInfo url="/assets/problem1.json" pollInterval={0} />,
-      document.getElementById('content')
-    )
-});
-
-
-routie('*', function() {
-
-    alert("ERROR: wrong route!")
-
-});
-
-// Silly router:
-//if (window.location.pathname == "/skillen") {
-//    React.render(
-//      <ProblemInfo url="/assets/problem1.json" pollInterval={0} />,
-//      document.getElementById('content')
-//    )
-//} else if (window.location.pathname.indexOf("/skillen/problems") === 0) {
-//    React.render(
-//      <CommentBox url="/js/comments.json" pollInterval={0} />,
-//      document.getElementById('content')
-//    )
-//} else if (window.location.pathname.indexOf("/skillen/problems/") === 0) {
-//    React.render(
-//      <ProblemInfo url="/js/problem1.json" pollInterval={0} />,
-//      document.getElementById('content')
-//    )
-//} else {
-//    React.render(
-//      <h1> ERROR! path {window.location.pathname} doesnt exists </h1>,
-//      document.getElementById('content')
-//    )
-//}
+//window.onclick = function(e) {
+//    // close context menu
+//    ReactDOM.render(React.createElement(ContextMenu, {showElement: false}),
+//        document.getElementById('contextMenu'));
+//    return true;
+//};

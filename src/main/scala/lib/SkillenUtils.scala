@@ -22,7 +22,7 @@ object SkillenUtils {
   implicit val executionContext = system.dispatcher
   implicit val timeout = Timeout(5.seconds)
 
-  val redis = RedisClient("localhost", 6379)
+  val redis = new RedisClient("localhost", 6379)
 
   def andTree(dir: File, ext: String): List[File] = {
     val fileList = dir.listFiles.toList
