@@ -34,6 +34,8 @@ var defaultController = function () {
             ReactDOM.render(React.createElement(UploadBook, {navigation: {hash: window.location.hash}}), document.getElementById('content'))
     } else if (window.location.hash === "#about") {
         ReactDOM.render(React.createElement(AboutTab, {navigation: {hash: window.location.hash}}), document.getElementById('content'))
+    } else if (window.location.hash === "#list-books") {
+        ReactDOM.render(React.createElement(Library, {navigation: {hash: window.location.hash}}), document.getElementById('content'))
     } else {
         throw "no route for this URL: " + window.location.hash
     }

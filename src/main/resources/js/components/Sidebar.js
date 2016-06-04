@@ -22,23 +22,24 @@ var Sidebar = React.createClass({
 
     FIELDS: Immutable.fromJS({
         "#about": "About",
-        "#add-text": "add-text",
-        "#list-books": "list-books",
-        "#learn-words": "learn-words"
+        "#add-text": "Add text",
+        "#list-books": "Library",
+        "#learn-words": "Vocabulary",
+        "#workbench": "Workbench"
     }),
 
     render: function () {
         var selected = this.props.hash;
         console.log(selected);
         return React.DOM.div({style: {"background-color": "beige"}},
-            "SIDEBAR:",
+            React.DOM.h4(null, "SIDEBAR:"),
             React.DOM.ul(null,
                 this.FIELDS.map(function (label, k) {
                     var cl = (this.props.hash == k) ? "red" : "black";
                     return React.DOM.li({key: k},
                         React.DOM.a({href: k, style: {color: cl}}, label)
                     )
-                }.bind(this)).valueSeq().toJS()
+                }.bind(this))
             )
         )
     }

@@ -22,10 +22,11 @@ var AboutTab = React.createClass({
     render: function () {
         return React.DOM.div(null,
             React.createElement(Sidebar, this.props.navigation),
-            React.DOM.h1(null, "caption"),
-            React.DOM.br(),
-            React.DOM.h4(null, "DASDAS DAS DAS DASd as dasd ")
-
+            React.DOM.div({className: "container"},
+                React.DOM.h1(null, "caption"),
+                React.DOM.br(),
+                React.DOM.h4(null, "DASDAS DAS DAS DASd as dasd ")
+            )
         )
     }
 

@@ -25,7 +25,7 @@ var UploadBook = React.createClass({
         // else
         return React.DOM.div(null,
             React.createElement(Sidebar, this.props.navigation),
-            React.DOM.div(null,
+            React.DOM.div({className: "container"},
                 //React.createElement(NewComponent1),
                 React.createElement(NewComponent3)
                 //// upload as a file
