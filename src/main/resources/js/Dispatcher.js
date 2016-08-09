@@ -42,10 +42,8 @@ var AppDispatcher = {
      * @param  {object} params The data coming from the view.
      */
     uploadBook: function (params) {
-        ajaxPostJSON("/api/upload-book", {
-                params: "upload",
-                data: params
-            },
+        ajaxPostJSON("/api/upload-book",
+            params,
             function (res) {
                 console.log("response:");
                 console.log(res);

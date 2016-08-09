@@ -35,7 +35,7 @@ var Library = React.createClass({
     },
 
     handleLoadBooksFromServer: function () {
-        ajaxGetJson("/api/list-books",
+        ajaxGetJson("/api/texts",
             {},
             function(res) {
                 console.log("LOADED");
@@ -70,8 +70,10 @@ var FetchedLibrary = React.createClass({
         return React.DOM.div({className: "container"},
             React.DOM.h1(null, "Library2"),
             React.DOM.ul(null,
-                Immutable.fromJS(this.props.books).map(function (text, title) {
-                        return React.DOM.li(null, title)
+                Immutable.fromJS(this.props.books).map(function (book, i) {
+                        return React.DOM.li(null,
+                            React.DOM.a({href: "?#library/" + book.get("url")}, book.get("url"))
+                        )
                 })
             )
         )

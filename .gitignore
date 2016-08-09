@@ -16,3 +16,4 @@ project/plugins/project/
 .idea
 
 src/main/resources/node_modules
+.DS_Store

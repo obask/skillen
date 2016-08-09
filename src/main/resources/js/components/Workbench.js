@@ -37,7 +37,6 @@ var Workbench = React.createClass({
 var MarkedText = React.createClass({
     displayName: "MarkedText",
 
-
     TMP: Immutable.fromJS([
         "Dsd asd as dasd a",
         "dsad sa sa ",
