@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io"
 	"net/http"
 	"encoding/json"
 	"fmt"
@@ -9,6 +8,7 @@ import (
 	"github.com/garyburd/redigo/redis"
 	"strings"
 	"unicode"
+	"path"
 )
 
 
@@ -46,14 +46,6 @@ type Token struct {
 }
 
 
-func hello(w http.ResponseWriter, r *http.Request) {
-
-	res, _ := redis.String(CONN.Do("GET", "ololo"))
-
-	io.WriteString(w, res)
-}
-
-
 func uploadBook(w http.ResponseWriter, r *http.Request) {
 
 	var tmp map[string]interface{}
@@ -67,9 +59,6 @@ func uploadBook(w http.ResponseWriter, r *http.Request) {
 	if _, err := CONN.Do("SADD", BOOKS_COLLECTION, url); err != nil {
 		panic(err)
 	}
-	if _, err := CONN.Do("HDEL", url); err != nil {
-		panic(err)
-	}
 	// if the url matches with other collection error will be returned
 	if _, err := CONN.Do("HSET", url, "caption", name); err != nil {
 		panic(err)
@@ -80,10 +69,12 @@ func uploadBook(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(name, text)
 
-	//fmt.Println(xx)
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintln(w, "{\"success\": true}")
+
 }
 
-func listBooks(w http.ResponseWriter, r *http.Request) {
+func listBooks(w http.ResponseWriter, _ *http.Request) {
 
 	//var tmp map[string]interface{}
 	//json.NewDecoder(r.Body).Decode(&tmp)
@@ -103,16 +94,40 @@ func listBooks(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func workbench(w http.ResponseWriter, r *http.Request) {
+func workbench2(w http.ResponseWriter, _ *http.Request) {
 	tok := Token{T: "dsad", W: "dsadsa", C: "dsads"}
 	tmp := []interface{}{"dasdas", tok, "dsad"}
 	user := Workbench{Caption: "US123", Text: tmp}
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(&user); err != nil {
 		panic(err)
 	}
-
 }
+
+func workbench(w http.ResponseWriter, r *http.Request) {
+	_, url := path.Split(r.URL.Path)
+	fmt.Println("ss =", url)
+
+	exists, err := CONN.Do("SISMEMBER", BOOKS_COLLECTION, url)
+	if err != nil {
+		panic(err)
+	}
+	if exists.(int64) == 0 {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	// else
+	tmp, err := redis.StringMap(CONN.Do("HGETALL", url))
+	if err != nil {
+		panic(err)
+	}
+	book := Book{Caption: tmp["caption"], Text: []interface{}{tmp["text"]}}
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(&book); err != nil {
+		panic(err)
+	}
+}
+
 
 func bookCaptionToUrl(ss string) string {
 	mapper := func(r rune) rune {
@@ -135,10 +150,8 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(localPath))))
 	http.HandleFunc("/api/upload-book", uploadBook)
 	http.HandleFunc("/api/texts", listBooks)
-	//http.HandleFunc("/api/", hello)
+	http.HandleFunc("/api/workbench/", workbench)
 
-
-	http.HandleFunc("/workbench/", workbench)
 	panic(http.ListenAndServe(":8000", nil))
 
 }

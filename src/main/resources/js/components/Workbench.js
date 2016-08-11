@@ -16,10 +16,66 @@
 
 "use strict";
 
+
+var FetchWorkbench = React.createClass({
+    displayName: "FetchWorkbench",
+
+    getInitialState: function () {
+        return {
+            data: null
+        }
+    },
+
+    componentWillMount: function () {
+        console.log("componentWillReceiveProps:", this.props);
+        var nextProps = this.props;
+        this.handleLoadBooksFromServer();
+    },
+
+    componentWillReceiveProps: function (nextProps) {
+        console.log("componentWillReceiveProps:", this.props);
+        this.handleLoadBooksFromServer();
+    },
+
+    handleLoadBooksFromServer: function () {
+
+        var bookId = this.props.navigation.hash.substring("#library/".length)
+        ajaxGetJson("/api/workbench/" + bookId,
+            {},
+            function(res) {
+                console.log("LOADED");
+                this.setState({data: res})
+            }.bind(this)
+        )
+    },
+
+    render: function () {
+        console.log("Workbench props:", this.props)
+
+        return React.DOM.div(null,
+            React.createElement(Sidebar, {hash: "#workbench"}),
+            // if
+            (this.state.data == null)
+            ? // then
+            React.DOM.div(null,
+                React.DOM.h1(null, "Workbench"),
+                React.DOM.br(),
+                React.DOM.h4(null, "loading..."))
+            : // else
+            React.createElement(Workbench, {
+                workbench: Immutable.fromJS(this.state.data),
+                breadcrumbs: Immutable.Seq("workbench")
+            })
+        )
+    }
+
+});
+
 var Workbench = React.createClass({
     displayName: "Workbench",
 
     render: function () {
+        console.log("WorkbenchWorkbenchWorkbench")
         return React.DOM.div(null,
             React.DOM.h1(null, this.props.workbench.get("caption")),
             React.DOM.br(),

@@ -35,7 +35,7 @@ var defaultController = function () {
     } else if (window.location.hash === "#about") {
         ReactDOM.render(React.createElement(AboutTab, {navigation: {hash: window.location.hash}}), document.getElementById('content'))
     } else if (startsWith("#library/", window.location.hash)) {
-        ReactDOM.render(React.createElement(Library, {navigation: {hash: window.location.hash}}), document.getElementById('content'))
+        ReactDOM.render(React.createElement(FetchWorkbench, {navigation: {hash: window.location.hash}}), document.getElementById('content'))
     } else if (window.location.hash === "#library") {
         ReactDOM.render(React.createElement(Library, {navigation: {hash: window.location.hash}}), document.getElementById('content'))
     } else {
