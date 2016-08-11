@@ -23,7 +23,7 @@ var Sidebar = React.createClass({
     FIELDS: Immutable.fromJS({
         "#about": "About",
         "#add-text": "Add text",
-        "#list-books": "Library",
+        "#library": "Library",
         "#learn-words": "Vocabulary",
         "#workbench": "Workbench"
     }),

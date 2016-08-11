@@ -42,16 +42,14 @@ var AppDispatcher = {
      * @param  {object} params The data coming from the view.
      */
     uploadBook: function (params) {
-        ajaxPostJSON("/api/upload-book", {
-                params: "upload",
-                data: params
-            },
+        ajaxPostJSON("/api/upload-book",
+            params,
             function (res) {
                 console.log("response:");
                 console.log(res);
-                window.window.location.hash = "#list-books"
+                window.window.location.hash = "#library"
             }
-        );
+        )
 
         //this.dispatch({
         //    actionType: TodoConstants.UPLOAD_BOOK,
