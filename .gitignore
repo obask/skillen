@@ -13,7 +13,7 @@ project/boot/
 project/plugins/project/
 
 # IDE specific
-.idea
+.idea/
 
 src/main/resources/node_modules
 .DS_Store
